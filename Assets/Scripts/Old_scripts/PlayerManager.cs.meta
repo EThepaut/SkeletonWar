@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fa183ca6da657db4bbfe2000b59edb89
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - redStaffMesh: {fileID: 4300000, guid: cb1ff45b08dfc494f8e8215af9a1b9c0, type: 3}
+  - greenStaffMesh: {fileID: 4300000, guid: 4f2db797af4e6c7428de6463b59ba904, type: 3}
+  - blueStaffMesh: {fileID: 4300000, guid: 9430c8a09f4a047498ec3ec67976f722, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
