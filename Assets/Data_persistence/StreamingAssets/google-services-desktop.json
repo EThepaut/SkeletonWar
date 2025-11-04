@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "350800803571",
+    "firebase_url": "https://coursfirebaseint2-default-rtdb.europe-west1.firebasedatabase.app", //TO EDIT
+    "project_id": "coursfirebaseint2",
+    "storage_bucket": "coursfirebaseint2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350800803571:android:93197bbf32cf67d1356986",
+        "android_client_info": {
+          "package_name": "CoursFirebaseInt2.Android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYSbbUVCX07S8MDpMlyorMvT8aluJD9PM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
