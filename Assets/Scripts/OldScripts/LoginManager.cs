@@ -6,7 +6,6 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using System;
-using Unity.Netcode;
 
 public class LoginManager : MonoBehaviour
 {
