@@ -1,9 +1,5 @@
-using System;
-using System.Threading.Tasks;
 using TMPro;
 using Unity.Netcode;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,43 +7,51 @@ using UnityEngine.UI;
 public class ConnectionManager : MonoBehaviour
 {
     [Header("Netcode UI")]
-    [SerializeField] private Button startHostButton;
+    [SerializeField] private Button playButton; //StartClientButton
 
     [Header("Session Parameters")]
-    [SerializeField] private int _maxPlayers;
-    [SerializeField] private TextMeshProUGUI _sessionName;
-    private ISession _session;
+    [SerializeField] private int _maxPlayersBySession;
 
     [Header("Client Parameters")]
-    [SerializeField] private TextMeshProUGUI _profileName;
-    private ConnectionState _state = ConnectionState.Disconnected;
+    [SerializeField] private TextMeshProUGUI _profileNameUI;
+    private string _profileName;
 
     private NetworkManager m_NetworkManager;
-
-    private enum ConnectionState
-    {
-        Disconnected,
-        Connecting,
-        Connected,
-    }
 
     private void Start()
     {
         m_NetworkManager = GetComponent<NetworkManager>();
-        m_NetworkManager.OnClientConnectedCallback += OnClientConnectedCallback;
+        if (!m_NetworkManager.IsServer && NetworkManager.Singleton.StartServer())
+            Debug.Log("Server started...");
+        else if(m_NetworkManager.IsServer)
+            Debug.LogWarning("Server did not started cause there is already one started");
+        else
+            Debug.Log("Server did not started...");
+
+        // to change
+        if (m_NetworkManager.ConnectedClients.Count < _maxPlayersBySession)
+            StartGame();
+        else
+            Debug.Log("Session full");
     }
 
     private void StartGame()
     {
-        NetworkManager.Singleton.StartHost();
+        if (NetworkManager.Singleton.StartClient())
+            Debug.Log("Client started...");
+        else
+            Debug.LogWarning("Client did not started...");
     }
 
     private void OnClientConnectedCallback(ulong clientId)
     {
-        if (m_NetworkManager.LocalClientId == clientId)
-        {
-            Debug.Log($"Client {clientId} is connected and can spawn {nameof(NetworkObject)}s at");
-        }
+
+    }
+
+    public void ReadPseudoInput(string pseudo)
+    {
+        _profileName = pseudo;
+        _profileNameUI.text = pseudo;
     }
 
     private void OnGUI()
@@ -57,6 +61,6 @@ public class ConnectionManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        //
+
     }
 }
