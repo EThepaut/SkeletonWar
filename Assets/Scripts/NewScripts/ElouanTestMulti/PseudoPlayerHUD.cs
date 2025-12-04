@@ -3,18 +3,28 @@ using Unity.Netcode;
 using UnityEngine;
 using SkeletonWar.Tools;
 
-public class PseudoPlayerHUD : MonoBehaviour
+public class PseudoPlayerHUD : NetworkBehaviour
 {
-    [SerializeField]
+    [Header("Client Information")]
+    [SerializeField] private TextMeshProUGUI _profileNameUI;
+    private string _profileName;
+
     private NetworkVariable<NetworkString> playerNetworkName = new NetworkVariable<NetworkString>();
-    public NetworkVariable<NetworkString> PlayerNetworkName => playerNetworkName;
 
     private bool overlaySet = false;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        if (IsHost)
+        {
+            playerNetworkName.Value = _profileName;
+        }
+    }
 
-        playerNetworkName.Value = " ";
+    public void ReadPseudoInput(string pseudo)
+    {
+        _profileName = pseudo;
+        Debug.Log(_profileName);
     }
 
     public void SetOverlay()
