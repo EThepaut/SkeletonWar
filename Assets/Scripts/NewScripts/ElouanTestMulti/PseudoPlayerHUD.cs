@@ -13,7 +13,8 @@ public class PseudoPlayerHUD : MonoBehaviour
 
     void Start()
     {
-        
+
+        playerNetworkName.Value = " ";
     }
 
     public void SetOverlay()
