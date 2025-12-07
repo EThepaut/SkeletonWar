@@ -14,7 +14,6 @@ public class PlayerClassData : ScriptableObject
     public bool canDash = false;
     public float dashForce = 20f;
     public float dashCooldown = 2f;
-    public int maxDashes = 1;
 
     [Header("JumpSettings")]
     public int maxJumps = 2;

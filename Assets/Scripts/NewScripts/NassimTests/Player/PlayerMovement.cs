@@ -20,7 +20,10 @@ public class PlayerMovement : MonoBehaviour
     private int currentJumpCount = 0;
     [SerializeField] bool isGrounded = false; //to debug
     private bool isJumpHeld = false;
-    [SerializeField] bool isRunning = false;
+    bool isRunning = false; 
+     bool isDashing = false;
+    bool canDash = true;
+    private float nextDashTime = 0f;    
     private Vector2 moveInput;
 
     void Awake()
@@ -35,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Jump.canceled += OnJumpCanceled;
         inputActions.Player.Run.performed += OnRunPerformed; 
         inputActions.Player.Run.canceled += OnRunCancelled;
+        inputActions.Player.Dash.performed += OnDashPerformed;
+        inputActions.Player.Dash.canceled += OnDashCancelled;
     }
 
     void OnDisable()
@@ -43,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Jump.canceled -= OnJumpCanceled;
         inputActions.Player.Run.performed -= OnRunPerformed;
         inputActions.Player.Run.canceled -= OnRunCancelled;
+        inputActions.Player.Dash.performed -= OnDashCancelled;
+        inputActions.Player.Dash.canceled -= OnDashCancelled;
         inputActions.Player.Disable();
     }
     void Start()
@@ -120,6 +127,33 @@ public class PlayerMovement : MonoBehaviour
             float gravityReduction = Physics.gravity.y * (1f - playerData.slowFallGravityScale);
             rb.AddForce(Vector3.up * -gravityReduction * rb.mass, ForceMode.Force);
         }
+    }
+
+    void HandleDash()
+    {
+        if(playerData == null) return;
+        if (isDashing && canDash)
+        {
+        Vector3 dashDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+        if (dashDirection == Vector3.zero)
+            {
+                dashDirection = Vector3.zero;
+            }
+        rb.AddForce(dashDirection * playerData.dashForce, ForceMode.Impulse);
+        }
+    }
+    void OnDashPerformed(InputAction.CallbackContext context)
+    {
+        if (canDash && Time.time >= nextDashTime) 
+        { 
+            isDashing = true;
+            HandleDash();       
+            nextDashTime = Time.time + playerData.dashCooldown;
+        }
+    }
+    void OnDashCancelled(InputAction.CallbackContext context)
+    {
+        isDashing = false;
     }
     void OnRunPerformed(InputAction.CallbackContext context)
     {
