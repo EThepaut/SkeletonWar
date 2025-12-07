@@ -18,8 +18,9 @@ public class PlayerMovement : MonoBehaviour
 
     //State
     private int currentJumpCount = 0;
-    [SerializeField] bool isGrounded = false;
+    [SerializeField] bool isGrounded = false; //to debug
     private bool isJumpHeld = false;
+    [SerializeField] bool isRunning = false;
     private Vector2 moveInput;
 
     void Awake()
@@ -32,12 +33,16 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.Player.Jump.performed += OnJumpPerformed;
         inputActions.Player.Jump.canceled += OnJumpCanceled;
+        inputActions.Player.Run.performed += OnRunPerformed; 
+        inputActions.Player.Run.canceled += OnRunCancelled;
     }
 
     void OnDisable()
     {
         inputActions.Player.Jump.performed -= OnJumpPerformed;
         inputActions.Player.Jump.canceled -= OnJumpCanceled;
+        inputActions.Player.Run.performed -= OnRunPerformed;
+        inputActions.Player.Run.canceled -= OnRunCancelled;
         inputActions.Player.Disable();
     }
     void Start()
@@ -84,8 +89,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerData == null) return;
         Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-        Vector3 targetVelocity = movement * playerData.moveSpeed;
-        rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
+        float speed = isRunning ? playerData.runSpeed : playerData.moveSpeed;
+        Vector3 targetVelocity = movement * speed;
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 velocityXZ = new Vector3(currentVelocity.x, 0f, currentVelocity.z);
+
+        Vector3 newVelocity = Vector3.MoveTowards(velocityXZ, targetVelocity, playerData.acceleration * Time.deltaTime);
+
+        rb.linearVelocity = new Vector3(newVelocity.x, rb.linearVelocity.y, newVelocity.z);
     }
 
     void TryJump()
@@ -110,7 +121,15 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.up * -gravityReduction * rb.mass, ForceMode.Force);
         }
     }
+    void OnRunPerformed(InputAction.CallbackContext context)
+    {
+        isRunning = true;
+    }
 
+    void OnRunCancelled(InputAction.CallbackContext context)
+    {
+        isRunning = false;
+    }
     void OnJumpPerformed(InputAction.CallbackContext context)
     {
         isJumpHeld = true;

@@ -6,6 +6,15 @@ public class PlayerClassData : ScriptableObject
     [Header("Movement")]
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
+    public float runSpeed = 8f;
+    public float acceleration = 10f;
+
+
+    [Header("Dash settings")]
+    public bool canDash = false;
+    public float dashForce = 20f;
+    public float dashCooldown = 2f;
+    public int maxDashes = 1;
 
     [Header("JumpSettings")]
     public int maxJumps = 2;
